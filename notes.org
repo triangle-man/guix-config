@@ -1,0 +1,62 @@
+*** Setting up ssh
+
+~ssh~ enabled during installation. To enable login with passwords,
+#+begin_src
+  ssh-copy-id user@host
+#+end_src
+
+*** Install packages as user
+
+*** Add non-free software
+
+** Extra packages
+
+- Home Environment
+
+  #+begin_src
+    guix home import ~/src/guix-config
+  #+end_src
+
+  then edit ~~/src/guix-config/configuration.scm~ and run ~guix home
+  reconfigure~. The first time I did this I got an error about a
+  non-existing ~/var/guix/profiles/per-user/james~. However,
+  installing a package (emacs) with ~git install~ created that
+  directory.
+
+
+** Minecraft
+
+#+begin_src
+  guix install openjdk
+  
+#+end_src
+
+** Housekeeping
+
+*** The locales thing
+
+Tries ~guix install glibc-locales~ as root. 
+
+*** Update Guix
+
+#+begin_src
+  guix pull
+  hash guix
+  guix package -u
+#+end_src
+
+
+
+
+* TODO
+- Figure out how to add emacs packages
+
+- Disable password login except on console
+
+  (I don't know how to do this.)
+
+- Enable tailscale
+
+
+  
+
