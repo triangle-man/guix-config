@@ -26,35 +26,38 @@
 
 ** Minecraft
 
-#+begin_src
+  #+begin_src
   guix install openjdk
-  
-#+end_src
+  #+end_src
 
 ** Housekeeping
 
 *** The locales thing
 
-Tries ~guix install glibc-locales~ as root. 
+Tried ~guix install glibc-locales~ as root. That didn't work. Will try
+updating the Guix system.
 
 *** Update Guix
 
+For packages:
 #+begin_src
   guix pull
   hash guix
   guix package -u
 #+end_src
 
-
+For system:
+#+begin_src
+  guix pull
+  sudo guix system reconfigure /etc/config.scm
+#+end_src
 
 
 * TODO
+
 - Figure out how to add emacs packages
-
 - Disable password login except on console
-
   (I don't know how to do this.)
-
 - Enable tailscale
 
 
