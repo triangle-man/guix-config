@@ -30,6 +30,10 @@
   guix install openjdk
   #+end_src
 
+  Running Minecraft
+
+  
+  
 ** Housekeeping
 
 *** The locales thing
@@ -51,6 +55,7 @@ For system:
   guix pull
   sudo guix system reconfigure /etc/config.scm
 #+end_src
+
 
 
 * TODO
