@@ -1,3 +1,14 @@
+* Diary
+
+** 15 Jan
+
+- Installed Ubuntu. ssh in from host.
+- Next: Full graphical install, is that usable?
+- Next: Guix as a package manager
+
+
+* Configuring Guix system
+
 *** Setting up ssh
 
 ~ssh~ enabled during installation. To enable login with passwords,
@@ -71,3 +82,62 @@ For system:
 
   
 
+* Installing Guix in Ubuntu under VMWare
+
+
+** Installation from ISO
+
+I chose [Ubuntu Server 24.04.1 LTS](https://ubuntu.com/download/server/arm).
+
+- I "updated to the new installer"
+- English (UK) keyboard
+- Defaults for all other options during install (eg, 20 GB hard drive)
+  up to username
+- Username james, password james
+- Install OpenSSH
+
+** After install
+
+~sudo apt upgrade~
+
+By default there is no root login.
+
+The name of guest isn't known to host. (Why not??) 
+
+Accessing the VM by ssh from host was not trivial. I got the IP
+address from either ~ip addr~ in the VM or ~arp -a~ in the
+host. However, the first time I tried to ssh I got "No route to
+host". Perhaps it had to wake up the daemon or something?
+
+** Install guix the package manager
+
+Downloaded and ran this script:
+https://git.savannah.gnu.org/gitweb/?p=guix.git;a=blob_plain;f=etc/guix-install.sh;hb=HEAD
+
+That encouraged me to install nscd so I also ran
+#+begin_src
+  sudo apt install nscd
+#+end_src
+
+Then
+#+begin_src
+  guix pull
+#+end_src
+to update guix.
+
+
+
+*** TODO
+Install VMWare Fusion tools
+
+
+
+** Install Guix as a package manager
+
+
+
+** Linux commands
+
+- ~ip addr~ :: What we used to do with ~ifconfig~.
+
+- ~arp -a~ :: Discover what (some?) addresses we know about.
