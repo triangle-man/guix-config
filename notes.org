@@ -31,7 +31,9 @@
   #+end_src
 
   Running Minecraft
-
+  #+begin_src 
+    java -Xmx4G -Xms4G -XX:+UnlockExperimentalVMOptions -XX:+UseZGC -jar server.jar --world worlddir
+  #+end_src
   
   
 ** Housekeeping
@@ -60,10 +62,11 @@ For system:
 
 * TODO
 
+- Copy new config here
+- Enable tailscale
 - Figure out how to add emacs packages
 - Disable password login except on console
   (I don't know how to do this.)
-- Enable tailscale
 
 
   
