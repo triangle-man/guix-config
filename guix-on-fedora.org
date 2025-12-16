@@ -1,0 +1,126 @@
+#+title: Making all my devices the same
+
+I'd like to have an identical set up across all my devices. My plan is
+to install Guix as a package manager, running under Fedora. (Why
+Fedora? Well, that's what my kids use, and that's what Isambard
+uses. And then Asahi Linux, which runs on Apple silicon, is a Fedora
+remix.) In the long run, I'd like to run GuixSD, but I suspect that is
+going to be hard to set up until I have some experience with Guix.
+
+** On Framework Desktop
+
+*** Digression: BIOS
+
+What is the bios? Apparently you need to hit F12 on boot; but I'm not
+sure my keyboard is available. Oh: it is available (over USB-C) if
+plugged in directly rather than through the monitor.
+
+*** Install Fedora
+
+1. Framework have
+   [[https://guides.frame.work/Guide/Fedora+43+Installation+on+the+Framework+Desktop/674][an
+   installation guide]].
+
+2. I am installing ~Fedora-KDE-Desktop-Live-43-1.6.x86_64~
+
+3. Apparently there is a decision to be made (in Step 3 of the
+   Framework guide) about whether or not to enable (or disable) Secure
+   Boot. It is unclear from the instructions whether doing nothing
+   will leave Secure Boot enabled, or leave it disabled.
+
+4. Huh.
+
+   #+begin_quote
+   The keyboard layout selected during installation is not used for
+   the LUKS unlock screen. The early‑boot environment defaults to
+   en‑US.
+   #+end_quote
+
+5. Somewhat amazingly, the Live USB system recognises my Keychron
+   keyboard, 4K monitor, and Apple Magic Trackpad (Lightning version).
+
+6. I'm only install on the main SSD for now. I have two SSDs, and the
+   defaults seem to aggregate them both as a "btrfs subvolume". I
+   don't want that -- I want /home on the secondary SSD. 
+
+*** Update Fedora
+
+Fedora update is:
+
+#+begin_src
+  sudo dfn update
+#+end_src
+
+*** Update firmware
+
+Check current version with
+
+#+begin_src
+  sudo dmidecode --type bios
+#+end_src
+
+Check latest version
+[[https://knowledgebase.frame.work/en_us/framework-desktop-bios-and-driver-releases-amd-ryzen-ai-max-300-series-BJHcn1Y4gg][from
+Framework here]].
+
+I'm on 03.03 and the latest is 03.04, so I did not bother to update.
+
+*** Fix partitions
+
+There's [[https://btrfs.readthedocs.io/][documentation for btrfs]].
+
+Actually, I am using KDE Partition Manager to create a new encrypted
+partition on the second NVMe, with the same LUKS passphrase as the
+other drive.
+
+There's an option for permissions on "root only" or "everyone". I
+don't know what this means, so I picked "everyone".
+
+Same application, "edit mount point". I'm mounting this on /data, and
+I ticked "do not prevent the system from booting of not mountable."
+
+Then
+#+begin_src
+  sudo systemctl daemon-reload
+#+end_src
+
+**** Second attempt
+
+Hm. I managed to format the second NVMe encrypted and mount it; but
+not at boot time.
+
+I'm restarting. Although, acutally, I think I have messed up. I should
+have left the second NVMe as /data, rather than /home.
+
+Well, let's see whether it automounts or not!
+
+**** Third attempt
+
+Final custom partitions:
+
+- Main drive
+  - vfat (EFI): 600 MB, mount at ~/boot/efi~
+  - ext4: 2 GB, mount at ~/boot~
+  - btrfs, LUKS2 encrypted, select "save passphrase"
+    - btrfs, mount at ~/home~
+    - btrfs, mount at ~/~
+
+- Secondary drive
+  - brtfs, LUKS2 encrypted, select "save passphrase"
+    - btrfs, mount at ~/data~
+
+
+*** On the todo queue
+
+- Do I need RPM Fusion?
+- How do I repartition to use the second drive?
+- What services are running?
+
+**** Done   
+
+- Stop asking for password on screensaver
+- Move Dock to left
+- Set device name: Put the name in ~/etc/hostname~.
+
+   
+
