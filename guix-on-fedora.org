@@ -113,9 +113,13 @@ Final custom partitions:
 *** On the todo queue
 
 - Do I need RPM Fusion?
-- How do I repartition to use the second drive?
 - What services are running?
-
+- How many dnf packages are installed
+- What gets sourced when, when bash starts?
+- How does systemd work?
+- How do cgroups work?
+- How do namespaces work?
+  
 **** Done   
 
 - Stop asking for password on screensaver
