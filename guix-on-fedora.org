@@ -63,7 +63,9 @@ Check latest version
 [[https://knowledgebase.frame.work/en_us/framework-desktop-bios-and-driver-releases-amd-ryzen-ai-max-300-series-BJHcn1Y4gg][from
 Framework here]].
 
-I'm on 03.03 and the latest is 03.04, so I did not bother to update.
+I'm on 03.03 and the latest is 03.04, so I did not bother to
+update. (In fact, since then, I've just hit yes to update for all
+updates.)
 
 *** Fix partitions
 
@@ -113,8 +115,8 @@ Final custom partitions:
 *** On the todo queue
 
 - Do I need RPM Fusion?
-- What services are running?
-- How many dnf packages are installed
+- What services are running? (See ~systemctl~)
+- How many dnf packages are installed?
 - What gets sourced when, when bash starts?
 - How does systemd work?
 - How do cgroups work?
@@ -126,5 +128,124 @@ Final custom partitions:
 - Move Dock to left
 - Set device name: Put the name in ~/etc/hostname~.
 
-   
+* rpmfusion
+
+Other, non-Redhat distributed software
+
+#+begin_src sh
+dnf lsudo dnf install
+https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm
+-E %fedora).noarch.rpm
+https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm
+-E %fedora).noarch.rpm
+#+end_src
+
+* Applications
+
+** R
+
+Somehow my setup compiles all R packages from source. That needed lots
+of development libraries, but mostly it all works with dnf.
+
+** QGIS
+
+** Godot
+
+I had to install an old version of Java. It is available from the
+"adoptium" repository -- this appears to be quasi-official.
+
+** Steam / wivrn
+
+Urk. Apparently I need to swap out some accelerated codecs.
+
+#+begin_src sh
+sudo dnf swap mesa-va-drivers mesa-va-drivers-freeworld
+sudo dnf swap mesa-vdpau-drivers mesa-vdpau-drivers-freeworld
+#+end_src
+
+And?
+
+#+begin_src sh
+sudo dnf swap ffmpeg-free ffmpeg --allowerasing
+#+end_src
+
+For wivrn:
+
+#+begin_quote
+Right click on game, go to Properties > General, and paste this in
+Launch Options:
+
+PRESSURE_VESSEL_IMPORT_OPENXR_1_RUNTIMES=1 VR_OVERRIDE=/run/host/usr/lib64/opencomposite/runtime %command%
+#+end_quote
+
+** TeX
+
+Fedora is currently packaging texlive 2023, whereas the actual texlive
+distribution is on 2025. I am going to try to install it with t1mgr.
+
+1. Nuke existing install:
+#+begin_src sh
+  $ dnf remove "texlive*" 
+  $ rm -rf ~/.texlive2023
+  $ rm -rf /usr/share/texlive /etc/texlive /var/lib/texmf
+#+end_src
+
+2. Follow [[https://tug.org/texlive/quickinstall.html][instructions]]:
+
+#+begin_src sh
+  $ mkdir tmp
+  $ cd tmp
+  $ curl -L -o install-tl-unx.tar.gz https://mirror.ctan.org/systems/texlive/tlnet/install-tl-unx.tar.gz
+
+  $ zcat < install-tl-unx.tar.gz | tar xf -
+  $ cd install-tl-20260123/
+  $ sudo dnf install perl-libwww-perl
+#+end_src
+
+Now the next part is tricky. texlive wants to go in
+~/usr/local/texlive~, but it doesn't want to be installed as root. (Or
+rather, it's happy with that, but it seems that there may be trouble
+later.) So ... for now, I am going to give myself permissions for
+~/usr/local/texlive~.
+
+#+begin_src sh
+  sudo mkdir /usr/local/texlive
+  sudo chown jamie:jamie /usr/local/texlive
+#+end_src
+
+What I might do as a temporary measure on the shared device
+(temporarily, before we get guix working!) is make a texlive owners group and
+add everyone to it. For now, let's try to get it working.
+
+Then
+#+begin_src sh
+  $ perl install-tl
+#+end_src
+
+It took 1min 20s to get through files beginning with "a", so I guess
+this is going to take a while!
+
+Okay, that produces the following, most of which I will ignore:
+#+begin_src
+ The following environment variables contain the string "tex"
+ (case-independent).  If you're doing anything but adding personal
+ directories to the system paths, they may well cause trouble somewhere
+ while running TeX.  If you encounter problems, try unsetting them.
+
+ Please ignore spurious matches unrelated to TeX. (To omit this check,
+ set the environment variable TEXLIVE_INSTALL_ENV_NOCHECK.)
+
+    TEXLIVE_INSTALL_NO_DISKCHECK=1
+#+end_src
+
+And:
+#+begin_src sh
+  ...
+Add /usr/local/texlive/2025/texmf-dist/doc/man to MANPATH.
+Add /usr/local/texlive/2025/texmf-dist/doc/info to INFOPATH.
+Most importantly, add /usr/local/texlive/2025/bin/x86_64-linux
+to your PATH for current and future sessions.
+#+end_src
+
+So I guess I will do that.
 
