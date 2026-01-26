@@ -240,12 +240,22 @@ Okay, that produces the following, most of which I will ignore:
 
 And:
 #+begin_src sh
-  ...
+...
 Add /usr/local/texlive/2025/texmf-dist/doc/man to MANPATH.
 Add /usr/local/texlive/2025/texmf-dist/doc/info to INFOPATH.
 Most importantly, add /usr/local/texlive/2025/bin/x86_64-linux
 to your PATH for current and future sessions.
 #+end_src
 
-So I guess I will do that.
+Although MANPATH and INFOPATH are not set by default, if you just set
+them, tex will not find things. An initial colon is required. So, in ~.bash_profile~:
+#+begin_src sh
+  export MANPATH=":/usr/local/texlive/2025/texmf-dist/doc/man"
+  export INFOPATH=":/usr/local/texlive/2025/texmf-dist/doc/info"
+  PATH="$PATH:/usr/local/texlive/2025/bin/x68_64-linux"
+#+end_src
 
+And I need a bunch of perl modules:
+#+begin_src sh
+  sudo dnf install perl-Unicode-Normalize perl-sigtrap
+#+end_src
